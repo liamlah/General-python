@@ -1,8 +1,8 @@
-#Created by Liam Jones 09/2018
+#Created by Liam Jones 20/09/2018
 #Designed to make it easier for me to find the floor for a particular apartment
 #in the building I work at.
 
-def frontbuilding(): #if the number is below 11
+def frontbuilding(): #Called if the apartment is below 11. The math based algorithms do not apply.
     global aptNo
     firstfloor = [8,7,3,2]
     secondfloor = [10,9,5,4]
@@ -22,49 +22,44 @@ def frontbuilding(): #if the number is below 11
         print("West podium, Tan Lawyers.\n")
     start()
 
-def between1144(): #algorithm for floors 11 between 44 where  
+#functions for each floor plan section. Because there are two sides to the building, Some floors have three apartments, some two, and there are some floor numbers not named in the building (such as 13)
+def between1144(): 
     global aptNo
     global floor
     floor = int(round(aptNo - 9)/3 +0.5) +1
-    #print(str(floor))
     result()
         
 def between4449():
     global aptNo
     global floor
     floor = int((aptNo)/3 +.5)
-    #print(str(floor))
     result()
     
 def between5053():
     global aptNo
     global floor
     floor = int((aptNo)/3 +.7)
-    #print(str(floor))
     result()
 
 def between5587():
     global aptNo
     global floor
     floor = int(round(aptNo - 50)/3 +0.5)
-    #print(str(floor))
     result()
             
 def between8893():
     global aptNo
     global floor
     floor = int((aptNo -42) /3 -.2)
-    #print(str(floor))
     result()
 
 def between9497():
     global aptNo
     global floor
     floor = int((aptNo - 42)/3)
-    #print(str(floor))
     result()
 
-def start():
+def start(): #beginning. Takes input and passes to ifsandbuts function.
     global aptNo
     global compass
     print("This program will tell you which floor the apartment is on.")
@@ -81,11 +76,9 @@ def start():
         compass = "West"
     else:
         compass = "East"
-
-
     ifsandbuts()
 
-def ifsandbuts():
+def ifsandbuts(): #determines which function to call based on the floor plan of the section of building the apartment is in.
     while True:
         if aptNo < 11 and aptNo > 0:
             frontbuilding()
@@ -110,7 +103,8 @@ def ifsandbuts():
         else:
             print("That Number is out of range. Please try again\n")
             start()
-def result():
+
+def result(): #prints out result of floor calculation along with apartment number and the wing.
     global compass
     global floor
     global aptNo
@@ -119,5 +113,6 @@ def result():
     compass = str(compass)
     print("Apartment %s is on floor %s and is in %s wing.\n\n\n" %(aptNo, floor, compass))
     start()
+
 start()
 
