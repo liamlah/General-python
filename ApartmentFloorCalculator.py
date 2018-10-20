@@ -67,7 +67,7 @@ def between9497():
 def start(): #beginning. Takes input and passes to ifsandbuts function.
     global aptNo
     global compass
-    print("-----------------------------------------------------------\nThis program will tell you which floor the apartment is on.")
+    print("\n-----------------------------------------------------------\nThis program will tell you which floor the apartment is on.")
     while True:
         try:
             aptNo = int(input("What apartment number are you looking for?\n>>>"))
@@ -128,7 +128,8 @@ def residentname():
     global aptNo
     sheet.cell_value(0,0)
     resident =(sheet.row_values(int(aptNo),0))
-    print("Resident(s) recorded at this address:\n{}\n{}\n{}\n\n" .format(resident[1], resident[2], resident[3]))
+    if resident[1] != '':
+        print("Resident(s) recorded at this address:\n{}\n{}\n{}" .format(resident[1], resident[2], resident[3]))
     start()
 
 start()
