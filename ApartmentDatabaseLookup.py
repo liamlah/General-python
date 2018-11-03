@@ -127,6 +127,7 @@ def floorsearch():
             floorsearch()
         elif sidechoice == 3:
             print("East podium has recipe #1 on Ground floor, #2 and #3 on floor 1, with #4 and #5 on floor 2.\nWest podium has Tan Lawyers #6 on Ground floor, #7 and #8 on floor 1, with #9 and #10 on floor 2.\n")
+            furtherinfo()
             break
         else:
             break
@@ -135,15 +136,18 @@ def floorsearch():
             sidefloor = int(input("Which floor are you looking for? (2-19)\n>>>"))
             if sidechoice == 2:  
                 print("Apartments on floor {} of the west building are {}.\n ".format (sidefloor, westfloors[sidefloor]))
+                furtherinfo()
                 break
             elif sidechoice == 1:
                 print("Apartments on floor {} of the East building are {}.\n ".format (sidefloor, eastfloors[sidefloor]))
+                furtherinfo()
                 break
         except KeyError:
             print("Such Floor does not exist.\n")
         except ValueError:        
             print("Such floor does not exist.\n")
 
+def furtherinfo():
     while True:
         doapartment = input("Do you want to do a further search on one of these apartments?\n1)Yes\n2)No\n>>>")
         if doapartment == '1':
