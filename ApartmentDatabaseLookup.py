@@ -128,7 +128,7 @@ def floorsearch():
         elif sidechoice == 3:
             print("East podium has recipe #1 on Ground floor, #2 and #3 on floor 1, with #4 and #5 on floor 2.\nWest podium has Tan Lawyers #6 on Ground floor, #7 and #8 on floor 1, with #9 and #10 on floor 2.\n")
             furtherinfo()
-            break
+            return
         else:
             break
     while True:
