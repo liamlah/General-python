@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 #Created by Liam Jones 27/10/2018
 #Apartment database searcher. Links to editable spreadsheets, for quick lookup and cross reference of resident information
+import datetime
+now = datetime.datetime.now()
+
+
+log = open('adlogfile.txt', 'a')
+log.write(str(now)+ '\n')
+log.close()
+
 import xlrd
 loc = (r'C:\Users\Admin\OneDrive\Documents\Name_apartment_database.xlsx')
 wb = xlrd.open_workbook(loc)
