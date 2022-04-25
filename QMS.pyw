@@ -1,5 +1,7 @@
+import data
 import PySimpleGUI as sg
 import webbrowser
+from data import images
 sg.theme('BluePurple')
 
 layout = [[sg.Text('Quick Med Search', font='bold')],
@@ -8,6 +10,9 @@ layout = [[sg.Text('Quick Med Search', font='bold')],
          [sg.Button('AMH', size=(21,1))],
          [sg.Button('Amboss', size=(21,1))],
          [sg.Button('BMJ', size=(21,1))],
+         [sg.Button('eTG', size=(21,1))],
+         [sg.Button('NEJM', size=(21,1))],
+         [sg.Button('NPS', size=(21,1))],
          [sg.Button('StatPearls', size=(21,1))],
          [sg.Button('RACGP', size=(21,1))],
          [sg.Button('UpToDate', size=(21,1))],
@@ -17,7 +22,7 @@ layout = [[sg.Text('Quick Med Search', font='bold')],
 
 
 
-window = sg.Window('QMS', layout, keep_on_top=True)
+window = sg.Window('QMS', layout, icon=images, keep_on_top=True)
 
 while True:  # Event Loop
     event, values = window.read()
@@ -33,10 +38,13 @@ while True:  # Event Loop
     if event == 'Amboss' and (values['-IN-']) != "":
         webbrowser.open('https://next.amboss.com/us/search/'+ (values['-IN-']))
     if event == 'NPS' and (values['-IN-']) != "":
-        webbrowser.open('https://www.nps.org.au/search?q='+ (values['-IN-']))
+        webbrowser.open('https://www.nps.org.au/search?type=all&category=article&age=all&sortby=meta_datePublished&q='+ (values['-IN-']))
     if event == 'UpToDate' and (values['-IN-']) != "":
         webbrowser.open('https://www-uptodate-com.ipacez.nd.edu.au/contents/search?search='+ (values['-IN-']),new=0, autoraise=True)
     if event == 'RACGP' and (values['-IN-']) != "":
         webbrowser.open('https://www.racgp.org.au/search?q='+ (values['-IN-']),new=0, autoraise=True)
-        
+    if event == 'eTG' and (values['-IN-']) != "":
+        webbrowser.open('https://tgldcdp-tg-org-au.eu1.proxy.openathens.net/searchAction?appendedinputbuttons='+ (values['-IN-']),new=0, autoraise=True)
+    if event == 'NEJM' and (values['-IN-']) != "":
+        webbrowser.open('https://www.nejm.org/search?q='+ (values['-IN-']),new=0, autoraise=True)         
 window.close()
