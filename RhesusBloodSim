@@ -5,32 +5,61 @@ import random
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
 def startchoices():
-	startprevalence = int(input("What percentage of the population Rhesus negative do you want to start with.\n>>>"))
+	startprevalence = int(input("What percentage of the population Rhesus positive do you want to start with.\n>>>"))
+	startpopulationsize = 2 * int(input("How many couples are in your starting population?"))
 	generationtime = int(input("How many generations do you want to simulate? To run until elimination, leave field blank\n>>>"))
 	familysize = int(input("What is the maximum family size? family sizes will be randomly generated below this number\n>>>"))
-	runsim(startprevalence,generationtime,familysize)	
+	runsim(startprevalence,startpopulationsize,generationtime,familysize)	
 
-def runsim(startprevalence):
+def runsim(startprevalence,startpopulationsize,generationtime,familysize):
 	class father:
 		allele1 = 0
 		allele2 = 0
-		phenotype = 0
+		phenotype = (allele1, allele2)
+		print(phenotype)
 	class mother:
 		allele1 = 0
 		allele2 = 0
-		phenotype = 0
+		phenotype = (allele1, allele2)
 	class child:
 		allele1 = 0
 		allele2 = 0
-		phenotype = 0
+		phenotype = (allele1, allele2)
 	d = {0: 'rh', 1: 'Rh'}
-	negativechance = random.randint(1,100)
-	if negativechance < startprevalence:
-		print("this works" + str(negativechance))
-		
+	positivechance = random.randint(1,100)
+	#if negativechance < startprevalence: # if below this number, 
+		#print("this works" + str(negativechance))
+	for x in range (0, startpopulationsize):
+		positivechance = random.randint(1,100)
+		if positivechance <= startprevalence:
+				print(positivechance)
+				father.allele1 = 1
+		positivechance = random.randint(1,100)
+		if positivechance <= startprevalence:
+				print(positivechance)
+				father.allele2 = 1
+				print(father.phenotype)
+		positivechance = random.randint(1,100)
+		if positivechance <= startprevalence:
+				print(positivechance)
+				mother.allele1 = 1
+		positivechance = random.randint(1,100)
+		if positivechance <= startprevalence:
+				print(positivechance)
+				mother.allele2 =1		
+		zygosity = random.randint(0,1)
+		if  zygosity == 1:
+			child.allele1 = father.allele1
+		else:
+			child.allele1 = father.allele2
+		zygosity = random.randint(0,1)
+		if zygosity == 1:
+			child.allele2 = mother.allele1
+		else:
+			child.allele2 = mother.allele2
 
 
 startchoices()
 
 
-"""you will need a for loop for each child, nested in a for loop for population size, then you need to figure out how to incorporate the new data into the next generation.
+"""you will need a for loop for each child, nested in a for loop for population size, then you need to figure out how to incorporate the new data into the next generation."""
