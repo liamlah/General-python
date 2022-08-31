@@ -1,0 +1,36 @@
+#rhesus population calculator
+import random
+
+
+print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
+#print("")
+def startchoices():
+	startprevalence = int(input("What percentage of the population Rhesus negative do you want to start with.\n>>>"))
+	generationtime = int(input("How many generations do you want to simulate? To run until elimination, leave field blank\n>>>"))
+	familysize = int(input("What is the maximum family size? family sizes will be randomly generated below this number\n>>>"))
+	runsim(startprevalence,generationtime,familysize)	
+
+def runsim(startprevalence):
+	class father:
+		allele1 = 0
+		allele2 = 0
+		phenotype = 0
+	class mother:
+		allele1 = 0
+		allele2 = 0
+		phenotype = 0
+	class child:
+		allele1 = 0
+		allele2 = 0
+		phenotype = 0
+	d = {0: 'rh', 1: 'Rh'}
+	negativechance = random.randint(1,100)
+	if negativechance < startprevalence:
+		print("this works" + str(negativechance))
+		
+
+
+startchoices()
+
+
+"""you will need a for loop for each child, nested in a for loop for population size, then you need to figure out how to incorporate the new data into the next generation.
