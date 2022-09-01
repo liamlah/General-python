@@ -1,26 +1,34 @@
 #rhesus population calculator
 import random
+from random import choice
+#import numpy as np
 
-
+#randnums= np.random.randint(0,2,10)
+#print(randnums)
+nextgenalleles = []
+thisgenalleles = []
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
 def startchoices():
 	startprevalence = int(input("What percentage of the population Rhesus positive do you want to start with.\n>>>"))
 	startpopulationsize = int(input("How many couples are in your starting population?"))
 	generationtime = int(input("How many generations do you want to simulate? To run until elimination, leave field blank\n>>>"))
-	maxfamilysize = int(input("What is the maximum family size? family sizes will be randomly generated below this number\n>>>"))
-	runsim(startprevalence,startpopulationsize,generationtime,maxfamilysize)	
+	averagefamilysize = int(input("What is the average family size? family sizes will be randomly generated with a gaussian distribution\n>>>"))
+	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)	
 
-def runsim(startprevalence,startpopulationsize,generationtime,maxfamilysize):
-	class father:
+def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize):
+	global nextgenallele1
+	global nextgenallele2
+	class father: #sets the attributes of the father
 		allele1 = 0
 		allele2 = 0
 		phenotype = (allele1, allele2)
-	class mother:
+	class mother:#sets mother attributes
 		allele1 = 0
 		allele2 = 0
 		phenotype = (allele1, allele2)
-	class child:
+		sensitised = 0
+	class child: #sets child attributes, which will be inherited randomly from father and mother
 		allele1 = 0
 		allele2 = 0
 		phenotype = (allele1, allele2)
@@ -32,28 +40,31 @@ def runsim(startprevalence,startpopulationsize,generationtime,maxfamilysize):
 		positivechance = random.randint(1,100)
 		if positivechance <= startprevalence:
 				father.allele1 = 1
-		print(positivechance, ("this is the positive chance in for dads first allele in  family" +str(x)))# for testing purposes you can comment these out later for clean results
+		print(positivechance, ("this is the positive chance in for dads first allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		positivechance = random.randint(1,100)
 		if positivechance <= startprevalence:
 				#print(positivechance)
 				father.allele2 = 1
-		print(positivechance, ("this is the positive chance in for dads first allele in  family" +str(x)))# for testing purposes you can comment these out later for clean results
+		print(positivechance, ("this is the positive chance in for dads second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		father.phenotype = (father.allele1, father.allele2)
 		print(father.phenotype, ("this is father phenotype"))# for testing purposes you can comment these out later for clean results
 		positivechance = random.randint(1,100)
 		if positivechance <= startprevalence:
 				#print(positivechance)
 				mother.allele1 = 1
-		print(positivechance, ("this is the positive chance in for mums first allele in  family" +str(x)))# for testing purposes you can comment these out later for clean results
+		print(positivechance, ("this is the positive chance in for mums first allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		positivechance = random.randint(1,100)
 		if positivechance <= startprevalence:
 				print(positivechance)
 				mother.allele2 =1		
-		print(positivechance, ("this is the positive chance in for mums first allele in  family" +str(x)))# for testing purposes you can comment these out later for clean results
+		print(positivechance, ("this is the positive chance in for mums second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		mother.phenotype = (mother.allele1, mother.allele2)
 		print(mother.phenotype, ("this is mother phenotype")) # for testing purposes you can comment these out later for clean results
-		averagefamilysize = random.randint(1,maxfamilysize)
-		for y in range (1, averagefamilysize):
+		familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
+		print(familydistribution, "average family size")
+		familydistribution = round(familydistribution)
+		print (familydistribution, "rounded family size")
+		for y in range (0, familydistribution):
 			zygosity = random.randint(0,1)
 			if  zygosity == 1:
 				child.allele1 = father.allele1
@@ -64,11 +75,23 @@ def runsim(startprevalence,startpopulationsize,generationtime,maxfamilysize):
 				child.allele2 = mother.allele1
 			else:
 				child.allele2 = mother.allele2
-			child.phenotype = (child.allele1, child.allele2)
-			if mother.phenotype == (0,0) and child.phenotype 
-			print(child.phenotype,("this is the child phenotype for the child number" +str(y)))
+			child.phenotype = (child.allele1, child.allele2) 
+			print(child.phenotype,("this is the child phenotype for the child number" +str(y+1)))
 # now work out how to count the loss of children
-				
+			#if mother.phenotype ==(0,0) and child.phenotype !=(0,0):
+					#mother.sensitised =+ 1  ### come back to this later- -- - - - - - '
+					#print(mother.sensitised)
+			if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
+				print("the child died")
+			else:
+				nextgenalleles.append(child.phenotype)
+				#nextgenallele2.append(child.allele2)
+			print("this be the list", nextgenalleles)
+			print("No of homozygous negatives",nextgenalleles.count((0 , 0)))
+			print("No of heterozygous positives",sum(nextgenalleles.count((1 , 0)+nextgenalleles.count(0,1))))
+			#print("No of heterozygous positives",nextgenalleles.count((0, 1)))
+			print("No of homozygous positives",nextgenalleles.count((1 , 1)))
+			#print(sum(nextgenallele1+ nextgenallele2, "this is the total"))			
 
 startchoices()
 
