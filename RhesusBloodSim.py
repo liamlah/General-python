@@ -126,16 +126,16 @@ def endresults():
 
 def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child):
 	for x in range(0, generationtime):
-		print("this is generation number", 0-generationtime)
+		"""print("this is generation number", 0-generationtime)
 		print(nextgenalleles)
-		if (1, 1) not in nextgenalleles:
-			print("poo")
-		if (1, 1) and (1, 0) and (0, 1) not in nextgenalleles:
-			endresults()	
-		elif (0, 0) and (0, 1) and (1, 0) not in nextgenalleles:
-			endresults()
+		positives = [(1, 1), (1, 0), (0, 1)] #-stuck on this =++===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		negatives = [(0, 0), (0, 1), (1, 0)]
+		if any(positives) in nextgenalleles:
+			print("keep going")	
+		elif any(negatives) in nextgenalleles:
+			print("keep going")
 		else:
-			print("its still going")
+			endresults()"""
 		print("working check alleles from last gen before clear",thisgenalleles) # working check can be deleleted later
 		print("working check alleles from list next gen",nextgenalleles) # working check can be deleted later
 		thisgenalleles.clear()
@@ -147,12 +147,16 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 				matchmaker = random.randint(0 , len(thisgenalleles) -1)
 				print(matchmaker)
 				father.phenotype = thisgenalleles[matchmaker]
+				father.allele1 = father.phenotype[0]
+				father.allele2 = father.phenotype[1]
 				print(thisgenalleles[matchmaker], "this is the matchmaker working")
 				print("this is this is thisgenallelesmatchmaker",thisgenalleles[matchmaker])
 				print("this is father phenotype", father.phenotype)
 				thisgenalleles.pop(matchmaker)
 				matchmaker = random.randint(0 , len(thisgenalleles) -1)
 				mother.phenotype = thisgenalleles[matchmaker]
+				mother.allele1 = mother.phenotype[0]
+				mother.allele2 = mother.phenotype[1]
 				print(thisgenalleles[matchmaker], "this is the matchmaker working")
 				thisgenalleles.pop(matchmaker)
 				print("this is workings", generationtime) # working check can be deleted later
