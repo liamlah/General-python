@@ -7,6 +7,7 @@ from random import choice
 #print(randnums)
 nextgenalleles = []
 thisgenalleles = []
+storecountdeadkids = 0
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
 def startchoices():
@@ -19,6 +20,7 @@ def startchoices():
 def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize):
 	global nextgenallele1
 	global nextgenallele2
+	global storecountdeadkids
 	class father: #sets the attributes of the father
 		allele1 = 0
 		allele2 = 0
@@ -37,26 +39,34 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 	#if negativechance < startprevalence: # if below this number, 
 		#print("this works" + str(negativechance))
 	for x in range (0, startpopulationsize):
-		positivechance = random.randint(1,100)
+		positivechance = random.randint(0,100)
 		if positivechance <= startprevalence:
 				father.allele1 = 1
+		else:
+				father.allele1 = 0
 		print(positivechance, ("this is the positive chance in for dads first allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
-		positivechance = random.randint(1,100)
+		positivechance = random.randint(0,100)
 		if positivechance <= startprevalence:
 				#print(positivechance)
 				father.allele2 = 1
+		else:
+				father.allele2 = 0
 		print(positivechance, ("this is the positive chance in for dads second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		father.phenotype = (father.allele1, father.allele2)
 		print(father.phenotype, ("this is father phenotype"))# for testing purposes you can comment these out later for clean results
-		positivechance = random.randint(1,100)
+		positivechance = random.randint(0,100)
 		if positivechance <= startprevalence:
 				#print(positivechance)
 				mother.allele1 = 1
+		else:
+				mother.allele1 = 0
 		print(positivechance, ("this is the positive chance in for mums first allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
-		positivechance = random.randint(1,100)
+		positivechance = random.randint(0,100)
 		if positivechance <= startprevalence:
-				print(positivechance)
-				mother.allele2 =1		
+				#print(positivechance)
+				mother.allele2 =1
+		else:
+				mother.allele2 = 0		
 		print(positivechance, ("this is the positive chance in for mums second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		mother.phenotype = (mother.allele1, mother.allele2)
 		print(mother.phenotype, ("this is mother phenotype")) # for testing purposes you can comment these out later for clean results
@@ -82,17 +92,25 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 					#mother.sensitised =+ 1  ### come back to this later- -- - - - - - '
 					#print(mother.sensitised)
 			if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
+				storecountdeadkids = + 1
 				print("the child died")
 			else:
 				nextgenalleles.append(child.phenotype)
 				#nextgenallele2.append(child.allele2)
-			print("this be the list", nextgenalleles)
-			print("No of homozygous negatives",nextgenalleles.count((0 , 0)))
-			print("No of heterozygous positives",sum(nextgenalleles.count((1 , 0)+nextgenalleles.count(0,1))))
-			#print("No of heterozygous positives",nextgenalleles.count((0, 1)))
-			print("No of homozygous positives",nextgenalleles.count((1 , 1)))
-			#print(sum(nextgenallele1+ nextgenallele2, "this is the total"))			
-
+		print("this be the list", nextgenalleles)
+		print("No of homozygous negatives",nextgenalleles.count((0 , 0)))
+		print("No of heterozygous positives", (nextgenalleles.count((1 , 0))))
+		print("No of other heterozygous positives",nextgenalleles.count((0 , 1)))
+		print("No of homozygous positives",nextgenalleles.count((1 , 1)))
+		#print(sum(nextgenallele1+ nextgenallele2, "this is the total"))			
+		storecountpositivehetero =+ nextgenalleles.count((1 , 0)) + nextgenalleles.count((0 , 1))
+		storecountnegativehomo=+ nextgenalleles.count((0 , 0))
+		storecountpositivehomo =+ nextgenalleles.count((1 , 1))
+		print("total homo negatives ", storecountnegativehomo)
+		print("total hetero positives", storecountpositivehetero)
+		print("total homo positives", storecountpositivehomo)
+		print("the number of dead kids",storecountdeadkids)
+			
 startchoices()
 
 
