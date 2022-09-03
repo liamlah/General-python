@@ -7,7 +7,7 @@ from random import choice
 #print(randnums)
 nextgenalleles = []
 thisgenalleles = []
-storecountdeadkids = 0
+storecountdeadkids = []
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
 def startchoices():
@@ -17,10 +17,56 @@ def startchoices():
 	averagefamilysize = int(input("What is the average family size? family sizes will be randomly generated with a gaussian distribution\n>>>"))
 	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)	
 
+def conception(averagefamilysize,child,father,mother,generationtime):
+	familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
+	print(familydistribution, "average family size")
+	familydistribution = round(familydistribution)
+	print (familydistribution, "rounded family size")
+	for y in range (0, familydistribution):
+		zygosity = random.randint(0,1)
+		if  zygosity == 1:
+			child.allele1 = father.allele1
+		else:
+			child.allele1 = father.allele2
+		zygosity = random.randint(0,1)
+		if zygosity == 1:
+			child.allele2 = mother.allele1
+		else:
+			child.allele2 = mother.allele2
+		child.phenotype = (child.allele1, child.allele2) 
+		print(child.phenotype,("this is the child phenotype for the child number" +str(y+1)))
+# now work out how to count the loss of children
+		#if mother.phenotype ==(0,0) and child.phenotype !=(0,0):
+				#mother.sensitised =+ 1  ### come back to this later- -- - - - - - '
+				#print(mother.sensitised)
+		if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
+			storecountdeadkids.append(1)
+			print("the child died")
+		else:
+			nextgenalleles.append(child.phenotype)
+			#nextgenallele2.append(child.allele2)
+	print("this be the list", nextgenalleles)
+	print("No of homozygous negatives",nextgenalleles.count((0 , 0)))
+	print("No of heterozygous positives", (nextgenalleles.count((1 , 0))))
+	print("No of other heterozygous positives",nextgenalleles.count((0 , 1)))
+	print("No of homozygous positives",nextgenalleles.count((1 , 1)))
+	#print(sum(nextgenallele1+ nextgenallele2, "this is the total")) # marked for deletion			
+	storecountpositivehetero =+ nextgenalleles.count((1 , 0)) + nextgenalleles.count((0 , 1))
+	storecountnegativehomo=+ nextgenalleles.count((0 , 0))
+	storecountpositivehomo =+ nextgenalleles.count((1 , 1))
+	print("total homo negatives ", storecountnegativehomo)
+	print("total hetero positives", storecountpositivehetero)
+	print("total homo positives", storecountpositivehomo)
+	print("the number of dead kids",sum(storecountdeadkids))
+	if thisgenalleles == []:
+		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child)
+	else:
+		print("go to next gen")
+
 def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize):
-	global nextgenallele1
-	global nextgenallele2
-	global storecountdeadkids
+	#global nextgenallele1 # to be deleted 
+	#global nextgenallele2 #to be deleted
+	#global storecountdeadkids
 	class father: #sets the attributes of the father
 		allele1 = 0
 		allele2 = 0
@@ -34,6 +80,7 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 		allele1 = 0
 		allele2 = 0
 		phenotype = (allele1, allele2)
+	#class storecount
 	d = {0: 'rh', 1: 'Rh'}
 	positivechance = random.randint(1,100)
 	#if negativechance < startprevalence: # if below this number, 
@@ -70,47 +117,46 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 		print(positivechance, ("this is the positive chance in for mums second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		mother.phenotype = (mother.allele1, mother.allele2)
 		print(mother.phenotype, ("this is mother phenotype")) # for testing purposes you can comment these out later for clean results
-		familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
-		print(familydistribution, "average family size")
-		familydistribution = round(familydistribution)
-		print (familydistribution, "rounded family size")
-		for y in range (0, familydistribution):
-			zygosity = random.randint(0,1)
-			if  zygosity == 1:
-				child.allele1 = father.allele1
-			else:
-				child.allele1 = father.allele2
-			zygosity = random.randint(0,1)
-			if zygosity == 1:
-				child.allele2 = mother.allele1
-			else:
-				child.allele2 = mother.allele2
-			child.phenotype = (child.allele1, child.allele2) 
-			print(child.phenotype,("this is the child phenotype for the child number" +str(y+1)))
-# now work out how to count the loss of children
-			#if mother.phenotype ==(0,0) and child.phenotype !=(0,0):
-					#mother.sensitised =+ 1  ### come back to this later- -- - - - - - '
-					#print(mother.sensitised)
-			if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
-				storecountdeadkids = + 1
-				print("the child died")
-			else:
-				nextgenalleles.append(child.phenotype)
-				#nextgenallele2.append(child.allele2)
-		print("this be the list", nextgenalleles)
-		print("No of homozygous negatives",nextgenalleles.count((0 , 0)))
-		print("No of heterozygous positives", (nextgenalleles.count((1 , 0))))
-		print("No of other heterozygous positives",nextgenalleles.count((0 , 1)))
-		print("No of homozygous positives",nextgenalleles.count((1 , 1)))
-		#print(sum(nextgenallele1+ nextgenallele2, "this is the total"))			
-		storecountpositivehetero =+ nextgenalleles.count((1 , 0)) + nextgenalleles.count((0 , 1))
-		storecountnegativehomo=+ nextgenalleles.count((0 , 0))
-		storecountpositivehomo =+ nextgenalleles.count((1 , 1))
-		print("total homo negatives ", storecountnegativehomo)
-		print("total hetero positives", storecountpositivehetero)
-		print("total homo positives", storecountpositivehomo)
-		print("the number of dead kids",storecountdeadkids)
-			
+		conception(averagefamilysize,child,father,mother,generationtime)
+	
+def endresults():
+	print("this is the end")
+	exit()
+	
+
+def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child):
+	for x in range(0, generationtime):
+		print("this is generation number", 0-generationtime)
+		print(nextgenalleles)
+		if (1, 1) not in nextgenalleles:
+			print("poo")
+		if (1, 1) and (1, 0) and (0, 1) not in nextgenalleles:
+			endresults()	
+		elif (0, 0) and (0, 1) and (1, 0) not in nextgenalleles:
+			endresults()
+		else:
+			print("its still going")
+		print("working check alleles from last gen before clear",thisgenalleles) # working check can be deleleted later
+		print("working check alleles from list next gen",nextgenalleles) # working check can be deleted later
+		thisgenalleles.clear()
+		thisgenalleles.extend(nextgenalleles)
+		nextgenalleles.clear()
+		print("working check alleles from last gen",thisgenalleles)# working check can be deleted later
+		for x in range(0, len(thisgenalleles)):
+			while len(thisgenalleles)-1 >2:	
+				matchmaker = random.randint(0 , len(thisgenalleles) -1)
+				print(matchmaker)
+				father.phenotype = thisgenalleles[matchmaker]
+				print(thisgenalleles[matchmaker], "this is the matchmaker working")
+				print("this is this is thisgenallelesmatchmaker",thisgenalleles[matchmaker])
+				print("this is father phenotype", father.phenotype)
+				thisgenalleles.pop(matchmaker)
+				matchmaker = random.randint(0 , len(thisgenalleles) -1)
+				mother.phenotype = thisgenalleles[matchmaker]
+				print(thisgenalleles[matchmaker], "this is the matchmaker working")
+				thisgenalleles.pop(matchmaker)
+				print("this is workings", generationtime) # working check can be deleted later
+				conception(averagefamilysize,child,father,mother,generationtime)
 startchoices()
 
 
