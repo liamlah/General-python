@@ -17,7 +17,7 @@ def startchoices():
 	averagefamilysize = int(input("What is the average family size? family sizes will be randomly generated with a gaussian distribution\n>>>"))
 	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)	
 
-def conception(averagefamilysize,child,father,mother,generationtime):
+def conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids):
 	familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
 	print(familydistribution, "average family size")
 	familydistribution = round(familydistribution)
@@ -59,7 +59,7 @@ def conception(averagefamilysize,child,father,mother,generationtime):
 	print("total homo positives", storecountpositivehomo)
 	print("the number of dead kids",sum(storecountdeadkids))
 	if thisgenalleles == []:
-		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child)
+		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids)
 	else:
 		print("go to next gen")
 
@@ -117,18 +117,28 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 		print(positivechance, ("this is the positive chance in for mums second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		mother.phenotype = (mother.allele1, mother.allele2)
 		print(mother.phenotype, ("this is mother phenotype")) # for testing purposes you can comment these out later for clean results
-		conception(averagefamilysize,child,father,mother,generationtime)
+		conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids)
 	
-def endresults():
-	print("this is the end")
+def endresults(generationtime,nextgenalleles,storecountdeadkids):
+	print("total generations:", generationtime)
+	hozp =nextgenalleles.count((1, 1))
+	hetz1 = nextgenalleles.count((1, 0))
+	hetz2 = nextgenalleles.count((0, 1))
+	hozn =nextgenalleles.count((0, 0))
+	totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
+	print("the end proportion of positive alleles is", totalpos)
 	exit()
 	
 
-def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child):
+def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids):
 	for x in range(0, generationtime):
-		"""print("this is generation number", 0-generationtime)
+		print("this is generation number", 0-generationtime)
 		print(nextgenalleles)
-		positives = [(1, 1), (1, 0), (0, 1)] #-stuck on this =++===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		if nextgenalleles and all(elem == (1, 1) for elem in nextgenalleles):
+			endresults(generationtime,nextgenalleles,storecountdeadkids)
+		elif nextgenalleles and all(elem ==(0,0) for elem in nextgenalleles):
+			endresults(generationtime,nextgenalleles,storecountdeadkids)
+		"""positives = [(1, 1), (1, 0), (0, 1)] #-stuck on this =++===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		negatives = [(0, 0), (0, 1), (1, 0)]
 		if any(positives) in nextgenalleles:
 			print("keep going")	
@@ -160,7 +170,8 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 				print(thisgenalleles[matchmaker], "this is the matchmaker working")
 				thisgenalleles.pop(matchmaker)
 				print("this is workings", generationtime) # working check can be deleted later
-				conception(averagefamilysize,child,father,mother,generationtime)
+				conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids)
+	endresults(generationtime,nextgenalleles,storecountdeadkids)
 startchoices()
 
 
