@@ -1,13 +1,18 @@
-#rhesus population calculator
+#rhesus population calculator python 3.10.4
 import random
 from random import choice
-#import numpy as np
+import matplotlib.pyplot as plt
+
 
 #randnums= np.random.randint(0,2,10)
 #print(randnums)
 nextgenalleles = []
 thisgenalleles = []
 storecountdeadkids = []
+frequencylistP = []
+frequencylistN = []
+generationgraph = [1]
+
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
 def startchoices():
@@ -15,9 +20,10 @@ def startchoices():
 	startpopulationsize = int(input("How many couples are in your starting population?"))
 	generationtime = int(input("How many generations do you want to simulate? To run until elimination, leave field blank\n>>>"))
 	averagefamilysize = int(input("What is the average family size? family sizes will be randomly generated with a gaussian distribution\n>>>"))
-	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)	
+	frequencylistP.append(startprevalence/100)
+	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph)	
 
-def conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids):
+def conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids,frequencylistP,frequencylistN,generationgraph):
 	familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
 	print(familydistribution, "average family size")
 	familydistribution = round(familydistribution)
@@ -59,11 +65,11 @@ def conception(averagefamilysize,child,father,mother,generationtime,storecountde
 	print("total homo positives", storecountpositivehomo)
 	print("the number of dead kids",sum(storecountdeadkids))
 	if thisgenalleles == []:
-		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids)
+		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids,frequencylistP,frequencylistN,generationgraph)
 	else:
 		print("go to next gen")
 
-def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize):
+def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph):
 	#global nextgenallele1 # to be deleted 
 	#global nextgenallele2 #to be deleted
 	#global storecountdeadkids
@@ -117,27 +123,54 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize)
 		print(positivechance, ("this is the positive chance in for mums second allele in  family" +str(x+1)))# for testing purposes you can comment these out later for clean results
 		mother.phenotype = (mother.allele1, mother.allele2)
 		print(mother.phenotype, ("this is mother phenotype")) # for testing purposes you can comment these out later for clean results
-		conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids)
+		conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids,frequencylistP,frequencylistN,generationgraph)
 	
-def endresults(generationtime,nextgenalleles,storecountdeadkids):
-	print("total generations:", generationtime)
-	hozp =nextgenalleles.count((1, 1))
-	hetz1 = nextgenalleles.count((1, 0))
-	hetz2 = nextgenalleles.count((0, 1))
-	hozn =nextgenalleles.count((0, 0))
-	totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
+def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,storecountdeadkids):
+	#generationgraph.append(generationtime)
+	print("this is also generation graph value before reverse", generationgraph)
+	print("this is also generation graph value", generationgraph)
+	#hozp =nextgenalleles.count((1, 1))
+	#hetz1 = nextgenalleles.count((1, 0))
+	#hetz2 = nextgenalleles.count((0, 1))
+	#hozn =nextgenalleles.count((0, 0))
+	#totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
 	print("the end proportion of positive alleles is", totalpos)
+	print("the end proportion of negative alleles is", 1-totalpos)
+	frequencylistN = [1-x for x in frequencylistP]
+	print(generationgraph,"this is generationgraph ~~~~~~~~~~~~~~~~~~~~~~~")
+	print(frequencylistP,"this is frequencylistp~~~~~~~~~~~~~~~~")
+	print(frequencylistN,"this is frequencylistn~~~~~~~~~~~~~~~~")
+	plt.plot(generationgraph,frequencylistP, color='red', marker='o', label ='Rh')
+	plt.plot(generationgraph,frequencylistN, color='black', marker='D', label ='rh')
+	plt.title('Allele Frequencies')
+	plt.xlabel('Generations')
+	plt.ylabel('Allele Frequency')
+	plt.grid(True)
+	plt.show()
 	exit()
 	
 
-def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids):
+def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids,frequencylistP,frequencylistN,generationgraph):
 	for x in range(0, generationtime):
-		print("this is generation number", 0-generationtime)
+		generationgraph.append(generationtime)
+		print("this is generation graph value", generationgraph)
+		print("this is generation number", generationtime)
 		print(nextgenalleles)
+		hozp =nextgenalleles.count((1, 1))
+		hetz1 = nextgenalleles.count((1, 0))
+		hetz2 = nextgenalleles.count((0, 1))
+		hozn = nextgenalleles.count((0, 0))
+		if len(nextgenalleles) > len(thisgenalleles):
+			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
+			totalpos2 = 1-totalpos
+		elif len(nextgenalleles) < len(thisgenalleles):
+			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(thisgenalleles))
+			totalpos2 = 1-totalpos
+		frequencylistP.append(totalpos)
 		if nextgenalleles and all(elem == (1, 1) for elem in nextgenalleles):
-			endresults(generationtime,nextgenalleles,storecountdeadkids)
+			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,storecountdeadkids)
 		elif nextgenalleles and all(elem ==(0,0) for elem in nextgenalleles):
-			endresults(generationtime,nextgenalleles,storecountdeadkids)
+			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,storecountdeadkids)
 		"""positives = [(1, 1), (1, 0), (0, 1)] #-stuck on this =++===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		negatives = [(0, 0), (0, 1), (1, 0)]
 		if any(positives) in nextgenalleles:
@@ -170,9 +203,14 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 				print(thisgenalleles[matchmaker], "this is the matchmaker working")
 				thisgenalleles.pop(matchmaker)
 				print("this is workings", generationtime) # working check can be deleted later
-				conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids)
-	endresults(generationtime,nextgenalleles,storecountdeadkids)
+				conception(averagefamilysize,child,father,mother,generationtime,storecountdeadkids,frequencylistP,frequencylistN,generationgraph)
+	endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,storecountdeadkids)
 startchoices()
 
 
 """you will need a for loop for each child, nested in a for loop for population size, then you need to figure out how to incorporate the new data into the next generation."""
+
+
+#things to fix
+#the first child dying part
+#remove prints see if it goes quicker
