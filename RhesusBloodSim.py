@@ -2,7 +2,7 @@
 import random
 from random import choice
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 #randnums= np.random.randint(0,2,10)
 #print(randnums)
@@ -11,7 +11,7 @@ thisgenalleles = []
 storecountdeadkids = []
 frequencylistP = []
 frequencylistN = []
-generationgraph = [1]
+generationgraph = []
 
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 #print("")
@@ -45,7 +45,9 @@ def conception(averagefamilysize,child,father,mother,generationtime,storecountde
 		#if mother.phenotype ==(0,0) and child.phenotype !=(0,0):
 				#mother.sensitised =+ 1  ### come back to this later- -- - - - - - '
 				#print(mother.sensitised)
-		if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
+		if mother.phenotype == (0,0) and child.phenotype !=(0,0): #mother.sensitised >0: 
+			mothersensitised = 1
+		if mother.phenotype == (0,0) and child.phenotype !=(0,0) and mothersensitised == 1:
 			storecountdeadkids.append(1)
 			print("the child died")
 		else:
@@ -129,6 +131,7 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 	#generationgraph.append(generationtime)
 	print("this is also generation graph value before reverse", generationgraph)
 	print("this is also generation graph value", generationgraph)
+	generationgraph.append(generationgraph[-1]+1)
 	#hozp =nextgenalleles.count((1, 1))
 	#hetz1 = nextgenalleles.count((1, 0))
 	#hetz2 = nextgenalleles.count((0, 1))
@@ -145,6 +148,7 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 	plt.title('Allele Frequencies')
 	plt.xlabel('Generations')
 	plt.ylabel('Allele Frequency')
+	plt.xticks(np.arange(min(generationgraph), max(generationgraph)+1, 1))
 	plt.grid(True)
 	plt.show()
 	exit()
@@ -152,7 +156,7 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 
 def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,storecountdeadkids,frequencylistP,frequencylistN,generationgraph):
 	for x in range(0, generationtime):
-		generationgraph.append(generationtime)
+		generationgraph.append(x)
 		print("this is generation graph value", generationgraph)
 		print("this is generation number", generationtime)
 		print(nextgenalleles)
