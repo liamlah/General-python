@@ -40,7 +40,7 @@ def startchoices():
 	while True:
 		try:
 			generationtime = int(input("How many generations do you want to simulate? Beware, the population and computing time grows exponentially\n>>>"))
-			if 1 < generationtime < 101:
+			if 1 < generationtime < 1001:
 				break
 			raise ValueError()
 		except ValueError:
@@ -187,9 +187,9 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
 #This neatly takes the data we got from the childrens genes, then moves them to the adult list so they can be used to create the next generation
 		thisgenalleles.clear()
-		random.shuffle(thisgenalleles)
-		if nextgenalleles > 100:
-			listmaxcalc = (100 - nextgenalleles)
+		random.shuffle(nextgenalleles)
+		if len(nextgenalleles) > 100:
+			listmaxcalc = (100 - len(nextgenalleles))
 			thisgenalleles = nextgenalleles[:len(nextgenalleles)+listmaxcalc]
 		else:
 			thisgenalleles.extend(nextgenalleles)	
