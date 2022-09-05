@@ -140,8 +140,6 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,
 #takes the frequency lists recorded previously and plots them on a chart
 #this can also be used to present in numerical terms the various statistics, as it does not iterate, and will only print once.
 def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries):
-	print("this is also generation graph value before reverse", generationgraph)
-	print("this is also generation graph value", generationgraph)
 	generationgraph.append(generationgraph[-1]+1)
 	#hozp =nextgenalleles.count((1, 1))
 	#hetz1 = nextgenalleles.count((1, 0))
@@ -149,13 +147,15 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 	#hozn =nextgenalleles.count((0, 0))
 	#totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
 	print("the end proportion of positive alleles is", totalpos)
-	print("the end proportion of negative alleles is", 1-totalpos)
+	print("the end proportion of negative alleles is", 1-totalpos) #gets the inverse of the positive alleles for the output
 	frequencylistN = [1-x for x in frequencylistP]
-	print(generationgraph,"this is generationgraph ~~~~~~~~~~~~~~~~~~~~~~~")
-	print(frequencylistP,"this is frequencylistp~~~~~~~~~~~~~~~~")
-	print(frequencylistN,"this is frequencylistn~~~~~~~~~~~~~~~~")
-	plt.plot(generationgraph,frequencylistP, color='red', marker='o', label ='Rh')
-	plt.plot(generationgraph,frequencylistN, color='black', marker='D', label ='rh')
+	print("Generations:",generationgraph,)
+	FlistPRound = [round(num, 2) for num in frequencylistP]
+	FlistNRound = [round(num, 2) for num in frequencylistN]
+	print("Positive frequencies per generation", FlistPRound)
+	print("Negative frequencies per generation", FlistNRound)
+	plt.plot(generationgraph,frequencylistP, color='red', marker='o', label ='Rh+')
+	plt.plot(generationgraph,frequencylistN, color='black', marker='D', label ='Rh-')
 	plt.title('Relative frequencies of Rh negative and positive alleles')
 	plt.xlabel('No. of Generations')
 	plt.ylabel('Allele Frequency')
@@ -175,7 +175,7 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 		hetz2 = nextgenalleles.count((0, 1))
 		hozn = nextgenalleles.count((0, 0))
 		if len(nextgenalleles) > len(thisgenalleles):
-			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
+			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles)) #calculates the total positive by counting all the homozygous positives, then weighting the heterozygotes by half, then dividing by the length of the list of alleles
 			totalpos2 = 1-totalpos
 		elif len(nextgenalleles) <= len(thisgenalleles):
 			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(thisgenalleles))
@@ -185,6 +185,7 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
 		elif nextgenalleles and all(elem ==(0,0) for elem in nextgenalleles):
 			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
+#This neatly takes the data we got from the childrens genes, then moves them to the adult list so they can be used to create the next generation
 		thisgenalleles.clear()
 		thisgenalleles.extend(nextgenalleles)
 		nextgenalleles.clear()
