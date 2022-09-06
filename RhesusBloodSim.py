@@ -100,10 +100,9 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,
 		mother.phenotype = (mother.allele1, mother.allele2)
 		conception(averagefamilysize,child,father,mother,generationtime,obituaries,frequencylistP,frequencylistN,generationgraph)
 	if thisgenalleles == []:
-		print("calculating generation:",generationgraph)
 		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph)
 	else:
-		print("calculating generation:",generationgraph)
+		pass #this is important, and I can't explain why
 
 
 
@@ -143,6 +142,8 @@ def conception(averagefamilysize,child,father,mother,generationtime,obituaries,f
 #Takes the data initially from runsim and the first for loop keeps a log of the number of generations that have passed and the distribution of alleles in each generation. 
 def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph):
 	for x in range(0, generationtime):
+		if generationgraph !=[]:
+			print("calculating generation:",generationgraph[-1]+1)
 		generationgraph.append(x)
 		hozp =nextgenalleles.count((1, 1))
 		hetz1 = nextgenalleles.count((1, 0))
@@ -185,8 +186,6 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 				mother.allele1 = mother.phenotype[0]
 				mother.allele2 = mother.phenotype[1]
 				thisgenalleles.pop(matchmaker)
-				if generationgraph !=[]:
-					print("calculating generation:",generationgraph[-1]+1)
 				conception(averagefamilysize,child,father,mother,generationtime,obituaries,frequencylistP,frequencylistN,generationgraph)
 	endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
 
@@ -215,10 +214,12 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 	plt.xlabel('No. of Generations')
 	plt.ylabel('Allele Frequency')
 	leg = plt.legend(loc='upper center')
-	if len(generationgraph) > 150:
-		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+1, 3))
+	if len(generationgraph) > 200:
+		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+5, 5))
+	elif len(generationgraph) > 150:
+		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+3, 3))
 	elif len(generationgraph) > 100:
-		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+1, 2))
+		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+2, 2))
 	else:	
 		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+1, 1))
 	plt.yticks(np.arange(0.0,1.1,0.1))
