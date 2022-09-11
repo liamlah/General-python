@@ -12,6 +12,7 @@ obituaries = []
 frequencylistP = []
 frequencylistN = []
 generationgraph = []
+generationpopulationcount= []
 
 #Starting function. This takes the input that will seed the rest of the program, then passes it to runsim function
 print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
@@ -54,6 +55,7 @@ def startchoices():
 		except ValueError:
 			print("***Please choose a number between 1 and 50***")
 	frequencylistP.append(startprevalence/100)
+	generationpopulationcount = startpopulationsize
 	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph)	
 
 
@@ -98,7 +100,7 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,
 		else:
 				mother.allele2 = 0		
 		mother.phenotype = (mother.allele1, mother.allele2)
-		conception(averagefamilysize,child,father,mother,generationtime,obituaries,frequencylistP,frequencylistN,generationgraph)
+		conception(averagefamilysize,child,father,mother,generationtime,obituaries,generationpopulationcount,frequencylistP,frequencylistN,generationgraph)
 	if thisgenalleles == []:
 		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph)
 	else:
@@ -108,13 +110,13 @@ def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,
 
 #This function first generates a family size around a gaussian distribution, so not every family is exactly the same size. But all families are guaranteed to conceive at least one child.
 #This function does not pass to another function, once it has finished iterating, the program will move back up to the generations function to complete the for loop and pass to the endresults function. 
-def conception(averagefamilysize,child,father,mother,generationtime,obituaries,frequencylistP,frequencylistN,generationgraph):
+def conception(averagefamilysize,child,father,mother,generationtime,obituaries,generationpopulationcount,frequencylistP,frequencylistN,generationgraph):
 	familydistribution = random.gauss(averagefamilysize, averagefamilysize/4)
 	if familydistribution < 1:
 		familydistribution = 1
 	familydistribution = round(familydistribution)
-#The for loop iterates for each child conceived. 1 or 0 is picked at random, and this determines whether the first or second allele is passed from the parent to child. Simulating the randomness of meiosis
-#child.phenotype then reformats these two number into the same tuple (x,x) as a parent
+	#The for loop iterates for each child conceived. 1 or 0 is picked at random, and this determines whether the first or second allele is passed from the parent to child. Simulating the randomness of meiosis
+	#child.phenotype then reformats these two number into the same tuple (x,x) as a parent
 	for y in range (0, familydistribution):
 		zygosity = random.randint(0,1)
 		if  zygosity == 1:
@@ -127,10 +129,11 @@ def conception(averagefamilysize,child,father,mother,generationtime,obituaries,f
 		else:
 			child.allele2 = mother.allele2
 		child.phenotype = (child.allele1, child.allele2) 
-#this is a bit of a hack - if you have a better idea on how to sensitise the mother, let me know
-#if the child and mother are incompatible, the child is added to the obituaries list, if not, the child is added to the next generation list.
+		#this is a bit of a hack - if you have a better idea on how to sensitise the mother, let me know
+		#if the child and mother are incompatible, the child is added to the obituaries list, if not, the child is added to the next generation list.
 		if mother.phenotype == (0,0) and child.phenotype !=(0,0)  and y>0: #mother.sensitised >0: 
 			obituaries.append(1)
+			#print(len(obituaries), "this is an obituary")
 		else:
 			nextgenalleles.append(child.phenotype)
 	storecountpositivehetero =+ nextgenalleles.count((1 , 0)) + nextgenalleles.count((0 , 1))
@@ -141,10 +144,16 @@ def conception(averagefamilysize,child,father,mother,generationtime,obituaries,f
 
 #Takes the data initially from runsim and the first for loop keeps a log of the number of generations that have passed and the distribution of alleles in each generation. 
 def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph):
+	obituarycounter = []
 	for x in range(0, generationtime):
 		if generationgraph !=[]:
 			print("calculating generation:",generationgraph[-1]+1)
 		generationgraph.append(x)
+		generationalobituary = len(obituaries)
+		obituarycounter.append(generationalobituary)
+		#print(obituarycounter)
+		obituaries.clear()
+		generationalobituary = 0
 		hozp =nextgenalleles.count((1, 1))
 		hetz1 = nextgenalleles.count((1, 0))
 		hetz2 = nextgenalleles.count((0, 1))
@@ -152,15 +161,19 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 		if len(nextgenalleles) > len(thisgenalleles):
 			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles)) #calculates the total positive by counting all the homozygous positives, then weighting the heterozygotes by half, then dividing by the length of the list of alleles
 			totalpos2 = 1-totalpos
+			generationpopulationcount.append(len(nextgenalleles))
 		elif len(nextgenalleles) <= len(thisgenalleles):
 			totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(thisgenalleles))
 			totalpos2 = 1-totalpos
+			generationpopulationcount.append(len(thisgenalleles))
 		frequencylistP.append(totalpos)
 		if nextgenalleles and all(elem == (1, 1) for elem in nextgenalleles):
-			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
+			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,obituarycounter,generationtime,nextgenalleles,obituaries)
 		elif nextgenalleles and all(elem ==(0,0) for elem in nextgenalleles):
-			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
-#This neatly takes the data we got from the childrens genes, then moves them to the adult list so they can be used to create the next generation
+			endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,obituarycounter,generationtime,nextgenalleles,obituaries)
+		else:obituaries.clear()
+
+		#This neatly takes the data we got from the childrens genes, then moves them to the adult list so they can be used to create the next generation
 		thisgenalleles.clear()
 		random.shuffle(nextgenalleles)
 		if len(nextgenalleles) > 1000:
@@ -169,11 +182,11 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 		else:
 			thisgenalleles.extend(nextgenalleles)	
 		nextgenalleles.clear()
-#The second for loop replaces the runsim algorithm for the subsequent generations. This is because we no longer need to generate couples based on probability, instead subsequent generations inherit the genes from the previous.
-#Each existing person from the current generation exists as a discrete set of two alleles in a list. A random number generator called the 'matchmaker' picks the father, removes him from the list
-#Then a new number is generated, which picks the mother and removes her from the list. In both cases, their genes are transferred to their respective classes.
-#each time this iterates, the parents attributes are passed to the conception function to generate their children.
-#The for loop runs for the length of the list of this generations alleles, when that runs out, the data is passed to the endresults function
+		#The second for loop replaces the runsim algorithm for the subsequent generations. This is because we no longer need to generate couples based on probability, instead subsequent generations inherit the genes from the previous.
+		#Each existing person from the current generation exists as a discrete set of two alleles in a list. A random number generator called the 'matchmaker' picks the father, removes him from the list
+		#Then a new number is generated, which picks the mother and removes her from the list. In both cases, their genes are transferred to their respective classes.
+		#each time this iterates, the parents attributes are passed to the conception function to generate their children.
+		#The for loop runs for the length of the list of this generations alleles, when that runs out, the data is passed to the endresults function
 		for x in range(0, len(thisgenalleles)):
 			while len(thisgenalleles)-1 >2:	
 				matchmaker = random.randint(0 , len(thisgenalleles) -1)
@@ -186,30 +199,75 @@ def generations(generationtime,thisgenalleles,nextgenalleles,father,mother,avera
 				mother.allele1 = mother.phenotype[0]
 				mother.allele2 = mother.phenotype[1]
 				thisgenalleles.pop(matchmaker)
-				conception(averagefamilysize,child,father,mother,generationtime,obituaries,frequencylistP,frequencylistN,generationgraph)
-	endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries)
+				conception(averagefamilysize,child,father,mother,generationtime,obituaries,generationpopulationcount,frequencylistP,frequencylistN,generationgraph)
+	endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,obituarycounter,generationtime,nextgenalleles,obituaries)
 
 
 #The final function
 #takes the frequency lists recorded previously and plots them on a chart
 #this can also be used to present in numerical terms the various statistics, as it does not iterate, and will only print once.
-def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,generationtime,nextgenalleles,obituaries):
+def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,obituarycounter,generationtime,nextgenalleles,obituaries):
 	generationgraph.append(generationgraph[-1]+1)
 	#hozp =nextgenalleles.count((1, 1))
 	#hetz1 = nextgenalleles.count((1, 0))
 	#hetz2 = nextgenalleles.count((0, 1))
 	#hozn =nextgenalleles.count((0, 0))
 	#totalpos = ((hozp+0.5*hetz1+ 0.5*hetz2)/len(nextgenalleles))
+	if len(nextgenalleles) > len(thisgenalleles):
+		generationpopulationcount.append(len(nextgenalleles))
+	elif len(nextgenalleles) <= len(thisgenalleles):
+		generationpopulationcount.append(len(thisgenalleles))
+	print("this is length of genpop", len(generationpopulationcount))
+	print("this is genpop",generationpopulationcount)
 	print("the end proportion of positive alleles is", totalpos)
 	print("the end proportion of negative alleles is", 1-totalpos) #gets the inverse of the positive alleles for the output
 	frequencylistN = [1-x for x in frequencylistP]
-	print("Generations:",generationgraph,)
+	print("Generations:",generationgraph)
 	FlistPRound = [round(num, 3) for num in frequencylistP]
 	FlistNRound = [round(num, 3) for num in frequencylistN]
 	print("Positive frequencies per generation", FlistPRound)
 	print("Negative frequencies per generation", FlistNRound)
-	plt.plot(generationgraph,frequencylistP, color='red', marker='o', label ='Rh+')
+	generationalobituary = len(obituaries)
+	obituarycounter.append(generationalobituary)
+	print(obituarycounter,"this is obitcount")
+	# Create figure and axis #1
+	fig, ax1 = plt.subplots()
+	# plot line chart on axis #1
+	ax1.plot(generationgraph, frequencylistP, color='red', marker='o', label ='Rh+')
+	ax1.plot(generationgraph, frequencylistN, color='black', marker='D', label ='Rh-') 
+	ax1.set_xlim(auto=True)
+	#ax1.set_xlim((min(generationgraph), max(generationgraph)+5, 5))
+	"""if len(generationgraph) > 200:
+		ax1.set_xlim((min(generationgraph), max(generationgraph)+5, 5))
+	elif len(generationgraph) > 150:
+		ax1.set_xlim((min(generationgraph), max(generationgraph)+3, 3))
+	elif len(generationgraph) > 100:
+		ax1.set_xlim((min(generationgraph), max(generationgraph)+2, 2))
+	else:	
+		ax1.set_xlim((min(generationgraph), max(generationgraph)+1, 1))"""
+	ax1.set_ylabel('Allele frequency')
+	ax1.set_ylim(0.0, 1.1, 0.1)
+	ax1.grid(True)
+	#ax1.legend(['average_temp'], loc="upper left")
+	# set up the 2nd axis
+	ax2 = ax1.twinx()
+	# plot bar chart on axis #2
+	obituarycounterarray = np.array(obituarycounter)
+	generationpopulationcountarray = np.array(generationpopulationcount)
+	totalpopulation = obituarycounterarray + generationpopulationcountarray
+	obitpercent = (obituarycounterarray/totalpopulation)*100 
+	ax2.bar(generationgraph, obitpercent, width=0.5, alpha=0.5, color='orange')
+	#ax2.grid(False) # turn off grid #2
+	ax2.set_ylabel('percentage of deaths per generation', color ='orange')
+	ax2.set_ylim(0, max(obitpercent))
+	ax2.set_ylim(0,100)
+	#ax2.legend(['average_percipitation_mm'], loc="upper right")
+	plt.show()
+
+	
+	"""plt.plot(generationgraph,frequencylistP, color='red', marker='o', label ='Rh+')
 	plt.plot(generationgraph,frequencylistN, color='black', marker='D', label ='Rh-')
+	plt.bar(generationgraph, obituarycounter, color = 'yellow', label ='total deaths')
 	plt.title('Relative frequencies of Rh negative and positive alleles')
 	plt.xlabel('No. of Generations')
 	plt.ylabel('Allele Frequency')
@@ -224,7 +282,8 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 		plt.xticks(np.arange(min(generationgraph), max(generationgraph)+1, 1))
 	plt.yticks(np.arange(0.0,1.1,0.1))
 	plt.grid(True)
-	plt.show()
+	plt.show()"""
+	
 	exit()
 	
 
