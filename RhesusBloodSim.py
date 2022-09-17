@@ -4,7 +4,7 @@ import random
 from random import choice
 import matplotlib.pyplot as plt
 import numpy as np
-
+import tkinter as tk
 
 nextgenalleles = []
 thisgenalleles = []
@@ -14,8 +14,18 @@ frequencylistN = []
 generationgraph = []
 generationpopulationcount= []
 
+
+
+"""def show_entry_fields():
+    print("starting prevalence: %s\npopulation size: %s\ngenerationtime: %s\naveragefamilysize: %s\n " % (e1.get(), e2.get(), e3.get(),e4.get()))"""
+
+#def startchoices():
+
+
+
+
 #Starting function. This takes the input that will seed the rest of the program, then passes it to runsim function
-print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
+"""print("This program will simulate the propagation of Rhesus negative alleles through a population\n")
 def startchoices():
 	infochoice = str(input("Would you like some theory behind the model? Y for yes, or any key to skip\n>>>"))
 	infochoice = infochoice.lower()
@@ -56,55 +66,59 @@ def startchoices():
 			print("***Please choose a number between 1 and 50***")
 	frequencylistP.append(startprevalence/100)
 	generationpopulationcount = startpopulationsize
-	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph)	
+	runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph)"""	
 
 
 #Takes the input from startchoices, creates classes for the hypothetical couples and represents the alleles as (x,x).
 #A random number is generated between 1 and 100, and the frequency percent you choose in the first function determines the cutoff.
 #If a randomly generated number is below your chosen frequency, then the allele is positive
 #The for loop iterates this process for each couple in the starting population, and for each couple, their data is sent to the generations function.
-def runsim(startprevalence,startpopulationsize,generationtime,averagefamilysize,frequencylistP,frequencylistN,generationgraph):
-	class father: #sets the attributes of the father
-		allele1 = 0
-		allele2 = 0
-		phenotype = (allele1, allele2)
-	class mother: #sets mother attributes
-		allele1 = 0
-		allele2 = 0
-		phenotype = (allele1, allele2)
-		sensitised = 0
-	class child: #sets child attributes, which will be inherited randomly from father and mother
-		allele1 = 0
-		allele2 = 0
-		phenotype = (allele1, allele2)
-	for x in range (0, startpopulationsize):
-		positivechance = random.randint(0,100)
-		if positivechance <= startprevalence:
-				father.allele1 = 1
-		else:
-				father.allele1 = 0
-		positivechance = random.randint(0,100)
-		if positivechance <= startprevalence:
-				father.allele2 = 1
-		else:
-				father.allele2 = 0
-		father.phenotype = (father.allele1, father.allele2)
-		positivechance = random.randint(0,100)
-		if positivechance <= startprevalence:
-				mother.allele1 = 1
-		else:
-				mother.allele1 = 0
-		positivechance = random.randint(0,100)
-		if positivechance <= startprevalence:
-				mother.allele2 =1
-		else:
-				mother.allele2 = 0		
-		mother.phenotype = (mother.allele1, mother.allele2)
-		conception(averagefamilysize,child,father,mother,generationtime,obituaries,generationpopulationcount,frequencylistP,frequencylistN,generationgraph)
-	if thisgenalleles == []:
-		generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph)
-	else:
-		pass #this is important, and I can't explain why
+def runsim(frequencylistP,frequencylistN,generationgraph):
+    startprevalence = int(e1.get())
+    startpopulationsize = int(e2.get())
+    generationtime = int(e3.get())
+    averagefamilysize = int(e4.get())
+    class father: #sets the attributes of the father
+        allele1 = 0
+        allele2 = 0
+        phenotype = (allele1, allele2)
+    class mother: #sets mother attributes
+        allele1 = 0
+        allele2 = 0
+        phenotype = (allele1, allele2)
+        sensitised = 0
+    class child: #sets child attributes, which will be inherited randomly from father and mother
+        allele1 = 0
+        allele2 = 0
+        phenotype = (allele1, allele2)
+    for x in range (0, startpopulationsize):
+        positivechance = random.randint(0,100)
+        if positivechance <= startprevalence:
+            father.allele1 = 1
+        else:
+            father.allele1 = 0
+        positivechance = random.randint(0,100)
+        if positivechance <= startprevalence:
+            father.allele2 = 1
+        else:
+            father.allele2 = 0
+        father.phenotype = (father.allele1, father.allele2)
+        positivechance = random.randint(0,100)
+        if positivechance <= startprevalence:
+            mother.allele1 = 1
+        else:
+            mother.allele1 = 0
+        positivechance = random.randint(0,100)
+        if positivechance <= startprevalence:
+            mother.allele2 =1
+        else:
+            mother.allele2 = 0		
+        mother.phenotype = (mother.allele1, mother.allele2)
+        conception(averagefamilysize,child,father,mother,generationtime,obituaries,generationpopulationcount,frequencylistP,frequencylistN,generationgraph)
+    if thisgenalleles == []:
+        generations(generationtime,thisgenalleles,nextgenalleles,father,mother,averagefamilysize,child,obituaries,frequencylistP,frequencylistN,generationgraph)
+    else:
+        pass #this is important, and I can't explain why
 
 
 
@@ -286,5 +300,30 @@ def endresults(generationgraph,totalpos,totalpos2,frequencylistP,frequencylistN,
 	
 	exit()
 	
+master = tk.Tk()
+tk.Label(master, 
+    text="starting Prevalence").grid(row=0)
+tk.Label(master, 
+    text="population size").grid(row=1)
+tk.Label(master, 
+    text="Generation time").grid(row=2)
+tk.Label(master, 
+    text="average family size").grid(row=3)
 
-startchoices()
+e1 = tk.Entry(master)
+e2 = tk.Entry(master)
+e3 = tk.Entry(master)
+e4 = tk.Entry(master)
+
+e1.grid(row=0, column=1)
+e2.grid(row=1, column=1)
+e3.grid(row=2, column=1)
+e4.grid(row=3, column=1)
+
+
+
+
+tk.Button(master, text='Quit', command=master.quit).grid(row=4,column=0, sticky=tk.W, pady=4)
+tk.Button(master, text='Show', command=lambda: runsim(frequencylistP,frequencylistN,generationgraph)).grid(row=4, column=1,sticky=tk.W, pady=4)
+tk.mainloop()
+#startchoices()
