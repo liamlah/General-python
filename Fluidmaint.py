@@ -3,16 +3,24 @@ print("Simple fluid replacement and maintenance trainer.\n")
 def menu():
     while True:        
         try:
-            menuchoice = int(input("Choose your difficulty level:\nPress 1 for fluid maintenance practice only (basic 4:2:1)\nPress 2 for maintenance and replacement practice\n\n#"))
+            menuchoice = int(input("Choose your difficulty level:\nPress 1 for fluid maintenance practice only (basic 4:2:1)\nPress 2 for maintenance and replacement practice\nPress 3 for instructions\n\n#"))
             break        
         except ValueError:
             print("***Please choose a number***\n")
     if menuchoice == 1:
-        print('You have chosen maintenance practice, enter 0 at any time to return to the menu.\n')
+        print("You have chosen maintenance practice, enter 0 at any time to return to the menu.\n")
         fluidmaint()
     elif menuchoice == 2:
-        print('You have chosen maintenance and replacement practice, enter 0 at any time to return to the menu.\nIf you end up with a decimal, round down to the nearest integer,\n')
+        print('You have chosen maintenance and replacement practice, enter 0 at any time to return to the menu.\nIf you end up with a decimal, round down to the nearest integer.\n')
         fluidmaintreplace()
+    elif menuchoice == 3:
+        
+        print("\n+------INSTRUCTIONS-------+")
+        print("MAINTENANCE: 4:2:1 algorithm for maintenance fluids is 4ml/kg of bodyweight/hr for the first 10kg an addional 2ml/kg/hr for every kilo between 11 and anď 20, then 1ml/kg/hr for each additional kilo.")
+        print("\nREPLACEMENT: Volume loss is represented as a percentage of dehydration. E.g if a 12kg child is 5% dehydrated, we assume 1kg of bodyweight == 1 litre of fluid. So we need to replace 12kg x 0.05, which is 600ml.")
+        print("Answering the rest of the question will require paying attention to the periods over which fluids are replaced.")
+        print("+-------------------------+\n")
+        menu()
     else:
         print("***Please select 1 or 2***\n")
         menu()#this part is lazy, I know
@@ -75,7 +83,7 @@ def fluidmaintreplace():
         rate ="day"
     while True:        
         try:
-            questionbox = int(input("What is the {} combined maintenance and replacement rate in ml for a {} percent dehydrated patient who weighs {}kg to be rehydrated over {} hours?\n$" .format(hoursordays, ptdehydration, ptweight, rehydrotime)))
+            questionbox = int(input("What is the {} combined maintenance and replacement rate in ml for a {}% dehydrated patient who weighs {}kg to be rehydrated over {} hours?\n$" .format(hoursordays, ptdehydration, ptweight, rehydrotime)))
             break        
         except ValueError:
             print("put an integer and try again") 
