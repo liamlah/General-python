@@ -1,7 +1,6 @@
 import random
-
+print("Simple fluid replacement and maintenance trainer.\n")
 def menu():
-    print("Online fluid replacement and maintenance trainer.\n")
     while True:        
         try:
             menuchoice = int(input("Choose your difficulty level:\nPress 1 for fluid maintenance practice only (basic4:2:1)\nPress 2 for maintenance and replacement practice\n\n#"))
@@ -16,6 +15,8 @@ def menu():
         fluidmaintreplace()
     else:
         print("please select 1 or 2")
+        menu()#this part is lazy, I know
+        
          
 
 def fluidmaint():
