@@ -3,10 +3,10 @@ print("Simple fluid replacement and maintenance trainer.\n")
 def menu():
     while True:        
         try:
-            menuchoice = int(input("Choose your difficulty level:\nPress 1 for fluid maintenance practice only (basic4:2:1)\nPress 2 for maintenance and replacement practice\n\n#"))
+            menuchoice = int(input("Choose your difficulty level:\nPress 1 for fluid maintenance practice only (basic 4:2:1)\nPress 2 for maintenance and replacement practice\n\n#"))
             break        
         except ValueError:
-            print("please choose a number")
+            print("***Please choose a number***\n")
     if menuchoice == 1:
         print('You have chosen maintenance practice, enter 0 at any time to return to the menu.\n')
         fluidmaint()
@@ -14,7 +14,7 @@ def menu():
         print('You have chosen maintenance and replacement practice, enter 0 at any time to return to the menu.\n')
         fluidmaintreplace()
     else:
-        print("please select 1 or 2")
+        print("***Please select 1 or 2***\n")
         menu()#this part is lazy, I know
         
          
@@ -34,7 +34,7 @@ def fluidmaint():
             questionbox = int(input("What is the maintenance rate in ml/hr for a %skg patient?\n$"%(ptweight)))
             break        
         except ValueError:
-            print("put an integer and try again") 
+            print("Put an integer and try again") 
     if questionbox == maintrate:
         print("CORRECT, the maintenance rate is: %sml/hr\n"%(maintrate))
         fluidmaint()
@@ -80,12 +80,12 @@ def fluidmaintreplace():
         except ValueError:
             print("put an integer and try again") 
     if int(finalanswer) <= questionbox <= 1+int(finalanswer):
-        print("CORRECT, the fluid amount is: {}ml/{}\nworking: the hourly rate is {}ml/hr and maintenance rate is {}ml/hr\n".format(finalanswer,rate,int(hourlyreplace),int(maintrate)))
+        print("CORRECT. The fluid amount is: {}ml/{}\nworking: the hourly rate is {}ml/hr and maintenance rate is {}ml/hr\n".format(finalanswer,rate,int(hourlyreplace),int(maintrate)))
         fluidmaintreplace()
     elif questionbox == 0:
         menu()
     else:
-        print("WRONG the fluid amount is: {}ml/{}\nworking: the hourly rate is {}ml/hr and maintenance rate is {}ml/hr\n".format(finalanswer,rate,int(hourlyreplace),int(maintrate)))
+        print("WRONG. The fluid amount is: {}ml/{}\nworking: the hourly rate is {}ml/hr and maintenance rate is {}ml/hr\n".format(finalanswer,rate,int(hourlyreplace),int(maintrate)))
         fluidmaintreplace()
 
 
