@@ -11,7 +11,7 @@ def menu():
         print('You have chosen maintenance practice, enter 0 at any time to return to the menu.\n')
         fluidmaint()
     elif menuchoice == 2:
-        print('You have chosen maintenance and replacement practice, enter 0 at any time to return to the menu.\n')
+        print('You have chosen maintenance and replacement practice, enter 0 at any time to return to the menu.\nIf you end up with a decimal, round down to the nearest integer,\n')
         fluidmaintreplace()
     else:
         print("***Please select 1 or 2***\n")
