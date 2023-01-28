@@ -121,4 +121,41 @@ menu()
 #begins the program
 
 
-
+def hardmode()
+	class.bronchiolitis:
+		age = 0 #
+		ADH = 0 #
+		NG = 0 #		
+	class.meningitis:
+		age = 0 
+		ADH = 0 #
+		NG = 0 #
+	class.gastroenteritis:
+		age = 0 
+		ADH = 0 
+		NG = 0 #	
+	class.shock:
+		age = 0 ##
+		ADH = 0 
+		NG = 0 	
+	class.postDKA:
+		age = 0 ## 
+		ADH = 0 
+		NG = 0 
+	class.others:
+		disease = ["viral induced wheeze", "asthma", ]
+		age = 0
+		ADH = 0 #
+		NG = 0
+		
+	ailment = random.randint(0,5)
+	if ailment == 0:	#bronchiolitis
+		age = random.randint(0,1)
+		if age == 0:
+			ptweight = random.randint(2,7) #### find out normal weight for <6mo
+		elif age == 1:
+			ptweight = random.randint (7,14) ####### again
+		ADH = random.randint(0,1):
+		###if ADH == 1
+	elif aiment == 1: #meningitis
+		age = 0
